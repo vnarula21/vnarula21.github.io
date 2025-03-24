@@ -9,16 +9,16 @@
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
         }
-       body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; /* Change height to min-height */
-    background: #f5f5f5;
-}
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f5f5f5;
+        }
         .booking-container {
             width: 100%;
             max-width: 360px;
@@ -130,5 +130,52 @@
             <a href="your-payment-link" class="book-button">Book & Pay Now</a>
         </form>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let dateInput = document.getElementById("date");
+            let timeSelect = document.getElementById("time");
+            
+            function updateAvailableTimes() {
+                let now = new Date();
+                let selectedDate = new Date(dateInput.value);
+                let currentTime = now.getHours() * 60 + now.getMinutes();
+                let cutoffTime = 14 * 60;
+
+                timeSelect.innerHTML = "";
+                let startTime = 10 * 60;
+                let endTime = 18 * 60;
+
+                if (selectedDate.toDateString() === now.toDateString() && currentTime > cutoffTime) {
+                    selectedDate.setDate(selectedDate.getDate() + 1);
+                    dateInput.value = selectedDate.toISOString().split("T")[0];
+                }
+
+                for (let t = startTime; t <= endTime; t += 30) {
+                    let hours = Math.floor(t / 60);
+                    let minutes = t % 60;
+                    let ampm = hours >= 12 ? "PM" : "AM";
+                    hours = hours > 12 ? hours - 12 : hours;
+                    if (hours === 0) hours = 12;
+
+                    let timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+                    let option = document.createElement("option");
+                    option.value = timeString;
+                    option.textContent = timeString;
+                    timeSelect.appendChild(option);
+                }
+            }
+
+            let now = new Date();
+            let minDate = now.toISOString().split("T")[0];
+            let maxDate = new Date(now.setDate(now.getDate() + 7)).toISOString().split("T")[0];
+            dateInput.setAttribute("min", minDate);
+            dateInput.setAttribute("max", maxDate);
+            dateInput.value = minDate;
+
+            updateAvailableTimes();
+            dateInput.addEventListener("change", updateAvailableTimes);
+        });
+    </script>
 </body>
 </html>
