@@ -14,39 +14,37 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: url('image.jpg') no-repeat center center;
-            background-size: cover;
+            background: url('image.jpg') no-repeat center center/cover;
         }
         .booking-container {
             width: 90%;
             max-width: 360px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            text-align: left;
         }
         .logo {
-            width: 150px;
-            height: auto;
-            margin-bottom: 15px;
+            width: 100px;
+            display: block;
+            margin-bottom: 10px;
         }
         .hero-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #000;
         }
         .hero-subtitle {
             font-size: 14px;
-            color: #000;
-            margin-bottom: 20px;
+            color: #333;
+            font-weight: 400;
+            margin-bottom: 15px;
         }
         .form-group {
-            text-align: left;
             margin-bottom: 10px;
         }
         .form-group label {
@@ -56,13 +54,17 @@
             margin-bottom: 4px;
             color: #000;
         }
-        .form-group input, .form-group select {
+        .form-group select, .form-group input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
             background: #fff;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
         }
         .book-button {
             background-color: #4CAF50;
@@ -77,6 +79,10 @@
             text-align: center;
             display: block;
             margin-top: 8px;
+            text-decoration: none;
+        }
+        .book-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -106,5 +112,52 @@
             <a href="your-payment-link" class="book-button">Book & Pay Now</a>
         </form>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let dateInput = document.getElementById("date");
+            let timeSelect = document.getElementById("time");
+            
+            function updateAvailableTimes() {
+                let now = new Date();
+                let selectedDate = new Date(dateInput.value);
+                let currentTime = now.getHours() * 60 + now.getMinutes();
+                let cutoffTime = 14 * 60;
+
+                timeSelect.innerHTML = "";
+                let startTime = 10 * 60;
+                let endTime = 18 * 60;
+
+                if (selectedDate.toDateString() === now.toDateString() && currentTime > cutoffTime) {
+                    selectedDate.setDate(selectedDate.getDate() + 1);
+                    dateInput.value = selectedDate.toISOString().split("T")[0];
+                }
+
+                for (let t = startTime; t <= endTime; t += 30) {
+                    let hours = Math.floor(t / 60);
+                    let minutes = t % 60;
+                    let ampm = hours >= 12 ? "PM" : "AM";
+                    hours = hours > 12 ? hours - 12 : hours;
+                    if (hours === 0) hours = 12;
+
+                    let timeString = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+                    let option = document.createElement("option");
+                    option.value = timeString;
+                    option.textContent = timeString;
+                    timeSelect.appendChild(option);
+                }
+            }
+
+            let now = new Date();
+            let minDate = now.toISOString().split("T")[0];
+            let maxDate = new Date(now.setDate(now.getDate() + 7)).toISOString().split("T")[0];
+            dateInput.setAttribute("min", minDate);
+            dateInput.setAttribute("max", maxDate);
+            dateInput.value = minDate;
+
+            updateAvailableTimes();
+            dateInput.addEventListener("change", updateAvailableTimes);
+        });
+    </script>
 </body>
 </html>
