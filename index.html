@@ -17,7 +17,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: url('your-image.jpg') no-repeat center center/cover;
+            background: #f5f5f5;
         }
         .booking-container {
             width: 100%;
@@ -29,7 +29,21 @@
             text-align: left;
             position: relative;
         }
-       
+        .booking-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('./image.jpg') no-repeat center center;
+    background-size: cover;
+    transform: scaleX(-1);
+    filter: none;
+    z-index: -1;
+    border-radius: 12px;
+}
+        
         .logo {
             width: 100px;
             height: auto;
