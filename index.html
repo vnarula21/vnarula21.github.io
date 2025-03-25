@@ -8,55 +8,75 @@
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
         body {
+            margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: url('image.jpg') no-repeat center center/cover;
+            background: #f5f5f5;
         }
         .booking-container {
-            width: 90%;
+            width: 100%;
             max-width: 360px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: left;
+            position: relative;
         }
+        .booking-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('./image.jpg') no-repeat center center;
+    background-size: cover;
+    transform: scaleX(-1);
+    filter: none;
+    z-index: -1;
+    border-radius: 12px;
+}
+        
         .logo {
             width: 100px;
-            display: block;
+            height: auto;
             margin-bottom: 10px;
+            opacity: 1;
+            background: transparent;
         }
         .hero-title {
             font-size: 18px;
             font-weight: bold;
             color: #000;
+            margin-bottom: 10px;
         }
         .hero-subtitle {
             font-size: 14px;
-            color: #333;
+            color: #000;
             font-weight: 400;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .form-group {
-            margin-bottom: 10px;
+            text-align: left;
+            margin-bottom: 15px;
         }
         .form-group label {
             display: block;
             font-size: 14px;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             color: #000;
         }
         .form-group select, .form-group input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
@@ -65,6 +85,28 @@
         .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #4CAF50;
+            background: white;
+        }
+       .payment-options {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px; /* Increased space */
+    font-family: 'Poppins', sans-serif; /* Modern, clean font */
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+}
+
+.payment-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    gap: 5px; /* Adds space between icon and text */
+}
+        .payment-option img {
+            width: 20px;
+            height: 20px;
         }
         .book-button {
             background-color: #4CAF50;
@@ -76,10 +118,10 @@
             border-radius: 6px;
             cursor: pointer;
             width: 100%;
-            text-align: center;
-            display: block;
-            margin-top: 8px;
             text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 8px;
         }
         .book-button:hover {
             background-color: #45a049;
@@ -109,11 +151,29 @@
                 <label for="time">Preferred Time</label>
                 <select id="time" name="time" required></select>
             </div>
+            <div class="payment-options">
+                <div class="payment-option" onclick="selectPayment('upi')">
+                    <img src="UPI.png" alt="UPI">
+                    <span>UPI Options</span>
+                </div>
+                <div class="payment-option" onclick="selectPayment('card')">
+                    <img src="atm-card.png" alt="Card">
+                    <span>Credit/DebitCard</span>
+                </div>
+                <div class="payment-option" onclick="selectPayment('netbanking')">
+                    <img src="mobile-banking.png" alt="Net Banking">
+                    <span>Net Banking</span>
+                </div>
+            </div>
             <a href="your-payment-link" class="book-button">Book & Pay Now</a>
         </form>
     </div>
-
     <script>
+        function selectPayment(method) {
+            console.log("Selected Payment Method:", method);
+        }
+    </script>
+<script>
         document.addEventListener("DOMContentLoaded", function() {
             let dateInput = document.getElementById("date");
             let timeSelect = document.getElementById("time");
@@ -123,14 +183,19 @@
                 let selectedDate = new Date(dateInput.value);
                 let currentTime = now.getHours() * 60 + now.getMinutes();
                 let cutoffTime = 14 * 60;
+                let bufferTime = 4 * 60; 
 
                 timeSelect.innerHTML = "";
                 let startTime = 10 * 60;
                 let endTime = 18 * 60;
 
-                if (selectedDate.toDateString() === now.toDateString() && currentTime > cutoffTime) {
-                    selectedDate.setDate(selectedDate.getDate() + 1);
-                    dateInput.value = selectedDate.toISOString().split("T")[0];
+                if (selectedDate.toDateString() === now.toDateString()) {
+                    if (currentTime > cutoffTime) {
+                        selectedDate.setDate(selectedDate.getDate() + 1);
+                        dateInput.value = selectedDate.toISOString().split("T")[0];
+                    } else {
+                        startTime = Math.ceil((currentTime + bufferTime) / 30) * 30;
+                    }
                 }
 
                 for (let t = startTime; t <= endTime; t += 30) {
