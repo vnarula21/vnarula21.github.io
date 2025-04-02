@@ -48,15 +48,15 @@
             margin-bottom: 10px;
         }
         .hero-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            color: #000;
+            color: #000000;
             margin-bottom: 10px;
         }
         .hero-subtitle {
             font-size: 14px;
-            color: #000;
-            font-weight: 400;
+            color: #0000000;
+            font-weight: 600;
             margin-bottom: 20px;
         }
         .form-group {
@@ -76,7 +76,7 @@
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
-            background: #fff;
+            background: rgba(220, 220, 220, 0.6); 
         }
         .book-button {
             background-color: #4CAF50;
@@ -94,12 +94,16 @@
         .book-button:hover {
             background-color: #45a049;
         }
+.hero-title, .hero-subtitle, .form-group label {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
     </style>
 </head>
 <body>
     <div class="booking-container">
         <img src="LOGO.png" alt="GOQii Logo" class="logo">
-        <h1 class="hero-title">Book a Personalized Consultation</h1>
+        <h1 class="hero-title">Your Health, Your Future – One Call Away!</h1>
         <p class="hero-subtitle">Get expert guidance from our lifestyle coaches for a healthier life.</p>
         
         <form class="booking-form" action="your-payment-link" method="post">
@@ -119,7 +123,7 @@
                 <label for="time">Preferred Time</label>
                 <select id="time" name="time" required></select>
             </div>
-            <button type="submit" class="book-button">Book Now</button>
+            <button type="submit" class="book-button">Talk to an Expert</button>
         </form>
     </div>
     
